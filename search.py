@@ -87,16 +87,77 @@ def depthFirstSearch(problem: SearchProblem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
+    initialState = problem.getStartState()
+    frontier = util.Stack()
+    frontier.push(initialState)
+    explored = set()
+    nodeParentAction = {initialState: (None, None)}
+    while not frontier.isEmpty():
+        node = frontier.pop()
+        if problem.isGoalState(node):
+            path = []
+            while nodeParentAction[node][0] != None:
+                path[:0] = [nodeParentAction[node][1]]
+                node = nodeParentAction[node][0]
+            return path
+        explored.add(node)
+        for child, action, cost in problem.getSuccessors(node):
+            if child not in explored:
+                nodeParentAction[child] = (node, action)
+                frontier.push(child)
+    return []
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    initialState = problem.getStartState()
+    frontier = util.Queue()
+    frontier.push(initialState)
+    explored = set()
+    nodeParentAction = {initialState: (None, None)}
+    while not frontier.isEmpty():
+        node = frontier.pop()
+        if problem.isGoalState(node):
+            path = []
+            while nodeParentAction[node][0] != None:
+                path[:0] = [nodeParentAction[node][1]]
+                node = nodeParentAction[node][0]
+            return path
+        explored.add(node)
+        for child, action, cost in problem.getSuccessors(node):
+            if child not in (explored and nodeParentAction):
+                nodeParentAction[child] = (node, action)
+                frontier.push(child)
+    return []
     util.raiseNotDefined()
 
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+    initialState = problem.getStartState()
+    frontier = util.PriorityQueue()
+    frontier.push(initialState, 0)
+    explored = set()
+    nodeParentActionCost = {initialState: (None, None, 0)}
+    while not frontier.isEmpty():
+        node = frontier.pop()
+        if problem.isGoalState(node):
+            path = []
+            while nodeParentActionCost[node][0] != None:
+                path[:0] = [nodeParentActionCost[node][1]]
+                node = nodeParentActionCost[node][0]
+            return path
+        explored.add(node)
+        for child, action, cost in problem.getSuccessors(node):
+            if child not in explored:
+                if child not in nodeParentActionCost:
+                    nodeParentActionCost[child] = (node, action, nodeParentActionCost[node][2] + cost)
+                    frontier.push(child, nodeParentActionCost[node][2] + cost)
+                elif nodeParentActionCost[node][2] + cost < nodeParentActionCost[child][2]:
+                    nodeParentActionCost[child] = (node, action, nodeParentActionCost[node][2] + cost)
+                    frontier.update(child, nodeParentActionCost[node][2] + cost)
+    return []
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
@@ -109,6 +170,29 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    initialState = problem.getStartState()
+    frontier = util.PriorityQueue()
+    frontier.push(initialState, heuristic(initialState, problem))
+    explored = set()
+    nodeParentActionCost = {initialState: (None, None, 0)}
+    while not frontier.isEmpty():
+        node = frontier.pop()
+        if problem.isGoalState(node):
+            path = []
+            while nodeParentActionCost[node][0] != None:
+                path[:0] = [nodeParentActionCost[node][1]]
+                node = nodeParentActionCost[node][0]
+            return path
+        explored.add(node)
+        for child, action, cost in problem.getSuccessors(node):
+            if child not in explored:
+                if child not in nodeParentActionCost:
+                    nodeParentActionCost[child] = (node, action, nodeParentActionCost[node][2] + cost)
+                    frontier.push(child, nodeParentActionCost[node][2] + cost + heuristic(child, problem))
+                elif nodeParentActionCost[node][2] + cost + heuristic(child, problem) < nodeParentActionCost[child][2]:
+                    nodeParentActionCost[child] = (node, action, nodeParentActionCost[node][2] + cost)
+                    frontier.update(child, nodeParentActionCost[node][2] + cost + heuristic(child, problem))
+    return []
     util.raiseNotDefined()
 
 
