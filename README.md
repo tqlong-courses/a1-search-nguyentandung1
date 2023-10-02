@@ -1,3 +1,4 @@
+[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=12160279&assignment_repo_type=AssignmentRepo)
 # Bài tập môn Trí tuệ nhân tạo
 ## Hướng dẫn nộp bài 1 (Search)
 1. Đọc hướng dẫn làm bài từ https://inst.eecs.berkeley.edu/~cs188/fa23/projects/proj1/
